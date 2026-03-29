@@ -1,4 +1,48 @@
+import { useState, useEffect } from 'react'
 import { PanelBase } from './PanelBase'
+import { useGameStore } from '../../store/gameStore'
+
+const skills = [
+  { skill: 'Frontend Development', level: 95 },
+  { skill: 'Backend / API', level: 88 },
+  { skill: 'Cloud & DevOps', level: 78 },
+  { skill: '3D / WebGL', level: 85 },
+  { skill: 'Machine Learning', level: 70 },
+]
+
+function AnimatedSkillBar({ skill, level }: { skill: string; level: number }) {
+  const [width, setWidth] = useState(0)
+  const activeZone = useGameStore((s) => s.activeZone)
+  const isPanelOpen = useGameStore((s) => s.isPanelOpen)
+
+  useEffect(() => {
+    if (activeZone === 'qualifications' && isPanelOpen) {
+      const timer = setTimeout(() => setWidth(level), 200)
+      return () => clearTimeout(timer)
+    } else {
+      setWidth(0)
+    }
+  }, [activeZone, isPanelOpen, level])
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 12 }}>
+        <span style={{ color: '#aabbcc' }}>{skill}</span>
+        <span style={{ color: '#00ff88' }}>{level}%</span>
+      </div>
+      <div style={{ background: '#111', borderRadius: 4, height: 6, overflow: 'hidden' }}>
+        <div style={{
+          width: `${width}%`,
+          height: '100%',
+          background: 'linear-gradient(to right, #00ff88, #00ffff)',
+          borderRadius: 4,
+          boxShadow: '0 0 8px #00ff8866',
+          transition: 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+        }} />
+      </div>
+    </div>
+  )
+}
 
 export function QualificationsPanel() {
   return (
@@ -37,28 +81,8 @@ export function QualificationsPanel() {
         <div>
           <h3 style={{ color: '#00ff88', margin: '0 0 12px', fontSize: 13, letterSpacing: 2 }}>// SKILLS MATRIX</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {[
-              { skill: 'Frontend Development', level: 95 },
-              { skill: 'Backend / API', level: 88 },
-              { skill: 'Cloud & DevOps', level: 78 },
-              { skill: '3D / WebGL', level: 85 },
-              { skill: 'Machine Learning', level: 70 },
-            ].map((item, i) => (
-              <div key={i}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 12 }}>
-                  <span style={{ color: '#aabbcc' }}>{item.skill}</span>
-                  <span style={{ color: '#00ff88' }}>{item.level}%</span>
-                </div>
-                <div style={{ background: '#111', borderRadius: 4, height: 6, overflow: 'hidden' }}>
-                  <div style={{
-                    width: `${item.level}%`,
-                    height: '100%',
-                    background: 'linear-gradient(to right, #00ff88, #00ffff)',
-                    borderRadius: 4,
-                    boxShadow: '0 0 8px #00ff8866',
-                  }} />
-                </div>
-              </div>
+            {skills.map((item, i) => (
+              <AnimatedSkillBar key={i} skill={item.skill} level={item.level} />
             ))}
           </div>
         </div>

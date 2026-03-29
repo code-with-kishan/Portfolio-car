@@ -150,6 +150,17 @@ export function HUD() {
   const toggleMusic = useGameStore((s) => s.toggleMusic)
   const easterEggsFound = useGameStore((s) => s.easterEggsFound)
   const isPanelOpen = useGameStore((s) => s.isPanelOpen)
+  const activeZone = useGameStore((s) => s.activeZone)
+
+  const zoneLabels: Record<string, { label: string; color: string }> = {
+    about: { label: 'ABOUT ME', color: '#00ffff' },
+    projects: { label: 'PROJECTS', color: '#ff00ff' },
+    certifications: { label: 'CERTIFICATIONS', color: '#ffff00' },
+    qualifications: { label: 'QUALIFICATIONS', color: '#00ff88' },
+    contact: { label: 'CONTACT', color: '#ff4400' },
+  }
+
+  const currentZone = activeZone ? zoneLabels[activeZone] : null
 
   return (
     <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 10 }}>
@@ -206,7 +217,38 @@ export function HUD() {
       </div>
 
       <AnimatePresence>
-        {!isPanelOpen && (
+        {activeZone && !isPanelOpen && currentZone && (
+          <motion.div
+            key={activeZone}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            style={{
+              position: 'absolute',
+              top: 60,
+              left: '50%',
+              transform: 'translateX(-50%)',
+              textAlign: 'center',
+              pointerEvents: 'none',
+            }}
+          >
+            <div style={{
+              background: `${currentZone.color}11`,
+              border: `1px solid ${currentZone.color}66`,
+              borderRadius: 8,
+              padding: '8px 20px',
+              color: currentZone.color,
+              fontFamily: 'monospace',
+              fontSize: 13,
+              letterSpacing: 3,
+              textShadow: `0 0 10px ${currentZone.color}`,
+              boxShadow: `0 0 20px ${currentZone.color}22`,
+            }}>
+              ▶ ZONE: {currentZone.label}
+            </div>
+          </motion.div>
+        )}
+        {!activeZone && !isPanelOpen && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

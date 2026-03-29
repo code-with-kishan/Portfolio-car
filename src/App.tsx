@@ -8,6 +8,7 @@ import { CertificationsPanel } from './components/panels/CertificationsPanel'
 import { QualificationsPanel } from './components/panels/QualificationsPanel'
 import { ContactPanel } from './components/panels/ContactPanel'
 import { EasterEggNotification } from './components/EasterEggs'
+import { Joystick } from './components/Joystick'
 import { useGameStore } from './store/gameStore'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -124,7 +125,7 @@ export default function App() {
   if (isMobile) return <MobileFallback />
 
   return (
-    <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', background: '#000511' }}>
+    <div style={{ width: '100vw', height: '100vh', overflow: 'hidden', background: '#2e7a1c' }}>
       <AnimatePresence>
         {!loaded && (
           <motion.div exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
@@ -137,6 +138,7 @@ export default function App() {
         <>
           <Scene />
           <HUD />
+          <Joystick />
           <AboutPanel />
           <ProjectsPanel />
           <CertificationsPanel />
